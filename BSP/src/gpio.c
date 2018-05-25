@@ -29,8 +29,21 @@ struct pin_index
 
 static const struct pin_index pins[] =
 {
-    { 0, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_1},
-    { 1, RCC_APB2Periph_GPIOB, GPIOB, GPIO_Pin_1},
+		{ 0, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_0},
+		{ 1, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_1},
+		{ 2, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_2},
+		{ 3, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_3},
+		{ 4, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_6},
+		{ 5, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_7},
+		{ 6, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_8},
+		{ 7, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_9},
+		{ 8, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_8},
+		{ 9, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_9},
+		{ 10, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_10},
+		{ 11, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_11},
+	
+		{ 12, RCC_APB2Periph_GPIOB, GPIOB, GPIO_Pin_1},
+    { 13, RCC_APB2Periph_GPIOB, GPIOB, GPIO_Pin_1},
 };
 
 #define ITEM_NUM(items) sizeof(items)/sizeof(items[0])

@@ -48,22 +48,22 @@
 
 /* RT_USING_UART */
 #define RT_USING_UART3
-#define RT_USING_UART2
-#define RT_USING_UART1
+//#define RT_USING_UART2
+//#define RT_USING_UART1
 #define RT_UART_RX_BUFFER_SIZE	64
 
 enum {
-	/* modbus slave 485 receive and transmit control pin index */
-	MODBUS_SLAVE_RT_CONTROL_PIN_INDEX = 0,
+	/* modbus slave 485 receive and transmit control pin index 见gpio.c中，下同*/
+	MODBUS_SLAVE_RT_CONTROL_PIN_INDEX = 12,
 	/* modbus master 485 receive and transmit control pin index */
-	MODBUS_MASTER_RT_CONTROL_PIN_INDEX = 1,
+	MODBUS_MASTER_RT_CONTROL_PIN_INDEX = 13,
 };
 
-#define LED_LED1_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_11)  	   //LED1 
-#define LED_LED1_OFF               GPIO_ResetBits(GPIOA,GPIO_Pin_11) 	   //LED1
+#define LED_LED1_ON                GPIO_SetBits  (GPIOB,GPIO_Pin_12)  	   //LED1 
+#define LED_LED1_OFF               GPIO_ResetBits(GPIOB,GPIO_Pin_12) 	   //LED1
 
-#define LED_LED2_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_12)  	   //LED1 
-#define LED_LED2_OFF               GPIO_ResetBits(GPIOA,GPIO_Pin_12) 	   //LED2
+//#define LED_LED2_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_12)  	   //LED1 
+//#define LED_LED2_OFF               GPIO_ResetBits(GPIOA,GPIO_Pin_12) 	   //LED2
 
 void rt_hw_board_init(void);
 

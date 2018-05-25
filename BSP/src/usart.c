@@ -402,7 +402,7 @@ void stm32_hw_usart_init(void)
 #if defined(RT_USING_UART3)
     uart = &uart3;
 
-    config.baud_rate = BAUD_RATE_115200;
+    config.baud_rate = BAUD_RATE_9600;
 
     serial3.ops    = &stm32_uart_ops;
     serial3.config = config;

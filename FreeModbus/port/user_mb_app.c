@@ -19,6 +19,9 @@
  * File: $Id: user_mb_app.c,v 1.60 2013/11/23 11:49:05 Armink $
  */
 #include "user_mb_app.h"
+//#include "app_task.h"
+
+void ValveCtrl(unsigned char valve);
 
 /*------------------------Slave mode use these variables----------------------*/
 //Slave mode:DiscreteInputs variables
@@ -123,7 +126,7 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
         switch (eMode)
         {
         /* read current register values from the protocol stack. */
-        case MB_REG_READ:
+        case MB_REG_READ:	//03
             while (usNRegs > 0)
             {
                 *pucRegBuffer++ = (UCHAR) (pusRegHoldingBuf[iRegIndex] >> 8);
@@ -134,7 +137,7 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
             break;
 
         /* write current register values with new values from the protocol stack. */
-        case MB_REG_WRITE:
+        case MB_REG_WRITE:	//06 10
             while (usNRegs > 0)
             {
                 pusRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
@@ -205,21 +208,24 @@ eMBErrorCode eMBRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress,
             break;
 
             /* write current coil values with new values from the protocol stack. */
-        case MB_REG_WRITE:
-            while (iNReg > 1)
+        case MB_REG_WRITE:	//05
+            while (iNReg > 1)//=1 不满足
             {
                 xMBUtilSetBits(&pucCoilBuf[iRegIndex++], iRegBitIndex, 8,
                         *pucRegBuffer++);
                 iNReg--;
             }
             /* last coils */
-            usNCoils = usNCoils % 8;
+            usNCoils = usNCoils % 8;//1
             /* xMBUtilSetBits has bug when ucNBits is zero */
             if (usNCoils != 0)
             {
                 xMBUtilSetBits(&pucCoilBuf[iRegIndex++], iRegBitIndex, usNCoils,
-                        *pucRegBuffer++);
+                        *pucRegBuffer++);//0x10 3 1 1 不知道该函数的作用，注释掉可以正常返回
             }
+						//添加个人代码，不知道是不是在这里添加
+						if(*(pucRegBuffer-1) == 0x01)//0xFF
+							ValveCtrl(usAddress);
             break;
         }
     }

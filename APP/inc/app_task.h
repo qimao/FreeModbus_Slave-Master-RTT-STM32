@@ -40,6 +40,6 @@ extern void cpu_usage_init(void);
  
 
 void rtthread_startup(void);
-
+void ValveCtrl(unsigned char valve);
 
 #endif

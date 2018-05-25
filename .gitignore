@@ -2,3 +2,5 @@
 /Debug
 /Release
 /EWARM/Debug
+/EWARM/settings
+*.dep

@@ -24,6 +24,8 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include "usart.h"
+#include "gpio.h"
+#include "app_task.h"
 /*
 *********************************************************************************************************
 *                                            LOCAL TABLES
@@ -49,6 +51,7 @@ void rt_hw_board_init()
 	BSP_Init();
 	stm32_hw_usart_init();
 	stm32_hw_pin_init();
+	ValveCtrl(0);//初始化所有的输出控制口电平 必须放在stm32_hw_pin_init();后面
 }
 
 /*******************************************************************************
@@ -110,18 +113,21 @@ static void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_12;  //继电器1  LED1  LED2
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11;  //Valve
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //蜂鸣器 继电器3   继电器2
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_1 ;  //LED1 U3EN
     GPIO_Init(GPIOB, &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9;  //Valve
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 
 	/*************数字输入IO初始化*********************/	
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
+//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+//    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_6;
-	GPIO_Init(GPIOG, &GPIO_InitStructure);
+//    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_6;
+//	GPIO_Init(GPIOG, &GPIO_InitStructure);
 
 }
 

@@ -174,7 +174,7 @@ eMBFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen )
                 ucBuf[0] = 0;
             }
             eRegStatus =
-                eMBRegCoilsCB( &ucBuf[0], usRegAddress, 1, MB_REG_WRITE );
+                eMBRegCoilsCB( &ucBuf[0], usRegAddress, 1, MB_REG_WRITE );//1 4 1 MB_REG_WRITE 相当于传递过去告诉下一个函数：指令=0xFF,地址=0x04(目标地址+1),写指令
 
             /* If an error occured convert it into a Modbus exception. */
             if( eRegStatus != MB_ENOERR )

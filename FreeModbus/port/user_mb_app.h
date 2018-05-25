@@ -8,13 +8,13 @@
 #include "mbutils.h"
 
 /* -----------------------Slave Defines -------------------------------------*/
-#define S_DISCRETE_INPUT_START        0
+#define S_DISCRETE_INPUT_START        0 //¿Î…¢ ‰»Î 
 #define S_DISCRETE_INPUT_NDISCRETES   16
-#define S_COIL_START                  0
+#define S_COIL_START                  0 //œﬂ»¶ 0x05
 #define S_COIL_NCOILS                 64
-#define S_REG_INPUT_START             0
+#define S_REG_INPUT_START             0 // ‰»Îºƒ¥Ê∆˜ 0x04
 #define S_REG_INPUT_NREGS             100
-#define S_REG_HOLDING_START           0
+#define S_REG_HOLDING_START           0 //±£≥÷ºƒ¥Ê∆˜ 0x03 
 #define S_REG_HOLDING_NREGS           100
 /* salve mode: holding register's all address */
 #define          S_HD_RESERVE                     0

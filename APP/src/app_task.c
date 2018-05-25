@@ -1,4 +1,5 @@
 #include "app_task.h"
+#include "pin.h"
 
 #ifdef __CC_ARM
 extern int Image$$RW_IRAM1$$ZI$$Limit;
@@ -38,22 +39,22 @@ void thread_entry_SysMonitor(void* parameter)
 	while (1)
 	{
 		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
-		usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
-		usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
+		usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor+1;
+		usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor+2;
 		LED_LED1_ON;
-		LED_LED2_ON;
 		rt_thread_delay(DELAY_SYS_RUN_LED);
 		LED_LED1_OFF;
-		LED_LED2_OFF;
 		rt_thread_delay(DELAY_SYS_RUN_LED);
 		IWDG_Feed(); //feed the dog
-		//Test Modbus Master
-		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
-		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
-		ucModbusUserData[0] = 0x1F;
+		
+		//Test Modbus Master	
+//		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
+//		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
+//		ucModbusUserData[0] = 0x1F;
+		
 //		errorCode = eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
 //		errorCode = eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
-		errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
 //		errorCode = eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
 //		errorCode = eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
 //		errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
@@ -61,9 +62,9 @@ void thread_entry_SysMonitor(void* parameter)
 //		errorCode = eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
 //		errorCode = eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
 		//记录出错次数
-		if (errorCode != MB_MRE_NO_ERR) {
-			errorCount++;
-		}
+//		if (errorCode != MB_MRE_NO_ERR) {
+//			errorCount++;
+//		}
 	}
 }
 
@@ -75,7 +76,7 @@ void thread_entry_SysMonitor(void* parameter)
 //******************************************************************
 void thread_entry_ModbusSlavePoll(void* parameter)
 {
-	eMBInit(MB_RTU, 0x01, 1, 115200,  MB_PAR_EVEN);
+	eMBInit(MB_RTU, 0x01, 3, 9600,  MB_PAR_NONE);//注意校验选择 否则数据不对
 	eMBEnable();
 	while (1)
 	{
@@ -91,7 +92,7 @@ void thread_entry_ModbusSlavePoll(void* parameter)
 //******************************************************************
 void thread_entry_ModbusMasterPoll(void* parameter)
 {
-	eMBMasterInit(MB_RTU, 2, 115200,  MB_PAR_EVEN);
+	eMBMasterInit(MB_RTU, 3, 9600,  MB_PAR_NONE);//注意校验选择 否则数据不对
 	eMBMasterEnable();
 	while (1)
 	{
@@ -118,11 +119,11 @@ int rt_application_init(void)
 			5);
 	rt_thread_startup(&thread_ModbusSlavePoll);
 
-	rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
-			thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
-			sizeof(thread_ModbusMasterPoll_stack), thread_ModbusMasterPoll_Prio,
-			5);
-	rt_thread_startup(&thread_ModbusMasterPoll);
+//	rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
+//			thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
+//			sizeof(thread_ModbusMasterPoll_stack), thread_ModbusMasterPoll_Prio,
+//			5);
+//	rt_thread_startup(&thread_ModbusMasterPoll);
 
 	return 0;
 }
@@ -190,5 +191,39 @@ void rtthread_startup(void)
 
 	/* never reach here */
 	return;
+}
+
+
+/*
+环阀的12个通道控制函数，引脚电平置高：电磁阀通；置低：电磁阀断
+在user_mb_app.c中调用该函数
+*/
+void ValveCtrl(unsigned char valve)
+{
+	unsigned char i = 0;
+//	unsigned char state = 0;
+	
+//	for(i=0;i<12;i++)
+//	{
+//		if(valve > 0 && valve < 13)
+//		{
+//			if(i == (valve-1)) state = PIN_HIGH;
+//			else state = PIN_LOW;
+//		}
+//		else state = PIN_LOW;//valve==0
+//		rt_pin_write(i, state);
+//	}
+	
+	if(valve > 12) return;
+	
+	for(i=0;i<12;i++)
+	{
+		rt_pin_write(i, PIN_LOW);
+	}
+	if(valve > 0)
+	{
+		rt_pin_write(valve-1, PIN_HIGH);
+	}
+	
 }
 

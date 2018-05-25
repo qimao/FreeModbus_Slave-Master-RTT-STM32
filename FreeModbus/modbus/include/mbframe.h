@@ -35,6 +35,9 @@
 PR_BEGIN_EXTERN_C
 #endif
 
+#include "port.h"
+#include "mb.h"
+
 /*!
  * Constants which defines the format of a modbus frame. The example is
  * shown for a Modbus RTU/ASCII frame. Note that the Modbus PDU is not
